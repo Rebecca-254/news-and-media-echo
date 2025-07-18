@@ -57,28 +57,25 @@ A comprehensive news and media platform built with Django that allows publishing
 | CI/CD Pipeline       | GitHub Actions / Travis CI    |
 
 
-📁 Project Structure
+## 📁 Project Structure
 echoes_of_the_world/
-├── accounts/         # User registration, login, profile
-├── news/             # Articles, categories, tags
-├── comments/         # Article comment system
-├── subscriptions/    # Newsletter and notifications
-├── search/           # Advanced search system
-├── static/           # Static files (CSS, JS)
-├── templates/        # Global HTML templates
-├── media/            # Uploaded media
-├── echoes_of_the_world/     # Main project config
-│   ├── __init__.py
-│   ├── settings.py          # Configures project, loads from .env
-│   ├── urls.py              # Root URL routing
-│   ├── wsgi.py
-│   ├── asgi.py
+├── accounts/ # User registration, login, profile
+├── news/ # Articles, categories, tags
+├── comments/ # Article comment system
+├── subscriptions/ # Newsletter and notifications
+├── search/ # Advanced search system
+├── static/ # Static files (CSS, JS)
+├── templates/ # Global HTML templates
+├── media/ # Uploaded media
+├── echoes_of_the_world/ # Main project config
+│ ├── init.py
+│ ├── settings.py # Configures project, loads from .env
+│ ├── urls.py # Root URL routing
+│ ├── wsgi.py
+│ ├── asgi.py
 │
-├── requirements.txt  # Dependencies
-├── .env 
-├── .gitignore# Environment variables
+├── requirements.txt # Dependencies
+├── .env # Environment variables
+├── .gitignore # Git ignore rules
 ├── manage.py
 └── README.md
-
-
-
