@@ -4,6 +4,7 @@
 A comprehensive news and media platform built with Django that allows publishing articles, managing media content, and engaging with readers.
 
 ## 🚀 Features
+---
 
 - 👤 **User Management**: Registration, authentication, and profile customization
 - 📝 **Content Publishing**: Create and manage news articles with rich media
@@ -15,6 +16,8 @@ A comprehensive news and media platform built with Django that allows publishing
 
 ## 🧱 Tech Stack
 
+---
+
 ### ⚙️ Backend Layer
 | Purpose                      | Technology         |
 |-----------------------------|--------------------|
@@ -22,11 +25,15 @@ A comprehensive news and media platform built with Django that allows publishing
 | Application Logic & Routing | Django Views, URLs |
 | Database ORM                | Django ORM         |
 
+---
+
 ### 🗃️ Data Layer
 | Purpose                     | Technology                             |
 |-----------------------------|-----------------------------------------|
 | Database                    | SQLite (default) / PostgreSQL (prod)    |
 | Media & Static File Storage| Django Static & Media Files System     |
+
+---
 
 ### 🖥️ Frontend Layer
 | Purpose                       | Technology                 |
@@ -35,6 +42,8 @@ A comprehensive news and media platform built with Django that allows publishing
 | Styling & Layout (optional)   | HTML, CSS, Bootstrap       |
 | Rich Text Editing (optional)  | CKEditor / TinyMCE         |
 
+---
+
 ### 🔐 Authentication & Security Layer
 | Purpose                      | Technology             |
 |------------------------------|------------------------|
@@ -42,11 +51,14 @@ A comprehensive news and media platform built with Django that allows publishing
 | Admin Interface              | Django Admin           |
 | Security Middleware          | Django CSRF, Sessions  |
 
+---
+
 ### 🔌 API Layer 
 | Purpose            | Technology               |
 |--------------------|--------------------------|
 | REST API Support   | Django REST Framework    |
 
+---
 ### 🛠️ DevOps / Deployment
 | Purpose              | Technology                    |
 |----------------------|-------------------------------|
@@ -56,8 +68,11 @@ A comprehensive news and media platform built with Django that allows publishing
 | Environment Variables| `.env` with `django-environ` or `python-decouple` |
 | CI/CD Pipeline       | GitHub Actions / Travis CI    |
 
-
+---
 ## 📁 Project Structure
+
+
+```bash
 echoes_of_the_world/
 ├── accounts/ # User registration, login, profile
 ├── news/ # Articles, categories, tags
