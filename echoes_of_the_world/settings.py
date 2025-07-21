@@ -37,9 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'accounts',  
-    'posts'# Custom app for user accounts
+    'django.contrib.staticfiles', 
+    'core.apps.CoreConfig',
+    'accounts.apps.AccountsConfig',
+    'news.apps.NewsConfig',
 ]
 
 MIDDLEWARE = [
@@ -107,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
@@ -118,6 +119,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -129,3 +132,7 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = reverse_lazy('profile')
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

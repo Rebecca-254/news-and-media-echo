@@ -16,11 +16,32 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
+    # Admin site
     path('admin/', admin.site.urls),
-        path('accounts/', include('accounts.urls')), 
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),
-    path('posts/', include('posts.urls')), # Custom app for posts
+    
+    # Core app (home, about, contact pages)
+    path('', include('core.urls')),
+    
+    # Accounts app (authentication)
+    path('accounts/', include('accounts.urls')),
+    
+    # News app (articles, categories)
+    path('news/', include('news.urls')),
+    
+    # Favicon (optional)
+    path('favicon.ico', TemplateView.as_view(template_name='favicon.ico', content_type='image/x-icon')),
 ]
+
+# Serve static files during development
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Custom error handlers (optional)
+#handler404 = 'core.views.handler404'
+#andler500 = 'core.views.handler500'

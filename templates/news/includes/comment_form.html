@@ -1,0 +1,14 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Leave a Comment</h5>
+        <form method="post" action="{% url 'news:add_comment' article.slug %}">
+            {% csrf_token %}
+            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+            <div class="mb-3">
+                {{ form.content }}
+                {{ form.content.errors }}
+            </div>
+            <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+    </div>
+</div>

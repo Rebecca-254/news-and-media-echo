@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Featured Articles -->
+<section class="mb-5">
+    <h2 class="mb-4">Featured Stories</h2>
+    <div class="row">
+        {% for article in featured_articles %}
+        <div class="col-md-4 mb-4">
+            {% include 'news/includes/article_card.html' with article=article featured=True %}
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Latest Articles -->
+<section class="mb-5">
+    <h2 class="mb-4">Latest News</h2>
+    <div class="row">
+        {% for article in latest_articles %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            {% include 'news/includes/article_card.html' with article=article %}
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Category Sections -->
+{% for category, articles in category_sections.items %}
+<section class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">{{ category }}</h2>
+        <a href="{% url 'news:category_detail' category.slug %}" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="row">
+        {% for article in articles %}
+        <div class="col-lg-3 col-md-6 mb-4">
+            {% include 'news/includes/article_card.html' with article=article %}
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+{% endblock %}

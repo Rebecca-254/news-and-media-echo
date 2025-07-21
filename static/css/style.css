@@ -1,0 +1,62 @@
+/* Base Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Header */
+.site-header {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Navigation */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* Article Cards */
+.article-card {
+    transition: transform 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+.article-card:hover {
+    transform: translateY(-5px);
+}
+.article-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Reactions */
+.reaction-btn.active {
+    background-color: #f8f9fa;
+    border-color: #6c757d;
+}
+
+/* Comments */
+.comment {
+    border-left: 3px solid #dee2e6;
+    padding-left: 1rem;
+    margin-bottom: 1.5rem;
+}
+.comment.reply {
+    margin-left: 3rem;
+}
+
+/* Footer */
+.site-footer {
+    background-color: #f8f9fa;
+    padding: 2rem 0;
+    margin-top: 3rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .article-meta span {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+}

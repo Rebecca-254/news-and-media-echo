@@ -1,0 +1,43 @@
+<div class="sidebar">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Categories</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                {% for category in categories %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{% url 'news:category_detail' category.slug %}">{{ category.name }}</a>
+                    <span class="badge bg-primary rounded-pill">{{ category.article_count }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Popular Tags</h5>
+        </div>
+        <div class="card-body">
+            {% for tag in popular_tags %}
+            <a href="{% url 'news:tag_detail' tag.slug %}" class="badge bg-secondary me-1 mb-1">#{{ tag.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Newsletter</h5>
+        </div>
+        <div class="card-body">
+            <form action="{% url 'news:newsletter_subscribe' %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input type="email" name="email" class="form-control" placeholder="Your email" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+            </form>
+        </div>
+    </div>
+</div>
