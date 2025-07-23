@@ -10,6 +10,11 @@
   </style>
 </head>
 <body>
+  <ul>
+    {% if user.is_authenticated %}
+      <li><a href="{% url 'accounts:dashboard' %}">Dashboard</a></li>
+    {% endif %}
+  </ul>
   {% block content %}{% endblock %}
 </body>
 </html>
