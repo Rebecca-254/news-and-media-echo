@@ -7,6 +7,9 @@ from django.views.generic import CreateView
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
+from posts.models import Post
 
 @csrf_protect
 def signup_view(request):
@@ -48,3 +51,13 @@ def logout_view(request):
 @login_required
 def profile_view(request):
     return render(request, 'accounts/profile.html', {'user': request.user})
+
+class UserPostListView(LoginRequiredMixin, ListView):
+    model = Post
+    template_name = 'accounts/dashboard.html'
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+       return Post.objects.filter(author=self.request.user).order_by('-created_at') 
+        
