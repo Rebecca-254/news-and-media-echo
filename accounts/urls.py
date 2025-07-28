@@ -1,7 +1,7 @@
+# accounts/urls.py
 from django.urls import path
 from . import views
 from .views import UserPostListView
-from .views import profile_view
 
 app_name = 'accounts'
 
@@ -10,7 +10,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile_view, name='profile'),
-    path('dashboard/', UserPostListView.as_view(), name='dashboard'),
-    path('', views.login_view, name='index'), 
-    # path('', views.home_view, name='home'), # Default to login page
+    path('dashboard/', views.dashboard, name='dashboard'),  # Use the function-based dashboard view
+    path('my-posts/', UserPostListView.as_view(), name='user_posts'),  # For posts listing
+    path('', views.login_view, name='index'),  # Default to login page
 ]

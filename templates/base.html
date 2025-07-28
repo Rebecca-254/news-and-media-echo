@@ -12,7 +12,7 @@
 <body>
   <ul>
     {% if user.is_authenticated %}
-      <li><a href="{% url 'accounts:dashboard' %}">Dashboard</a></li>
+      <li><a href="{% url 'accounts:dashboard' %}"></a></li>
     {% endif %}
   </ul>
   {% block content %}{% endblock %}
