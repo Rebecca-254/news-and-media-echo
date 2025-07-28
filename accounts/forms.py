@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
+from .models import CustomUser
 
 User = get_user_model()
 
@@ -34,3 +35,10 @@ class CustomAuthenticationForm(AuthenticationForm):
         # Add CSS classes for styling
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'first_name', 'last_name', 
+                 'profile_picture', 'bio', 'location']      
