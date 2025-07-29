@@ -1,28 +1,617 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Dashboard - Echos of the World{% endblock %}
 
 {% block content %}
 <div class="dashboard-container">
-    <h2>Your Dashboard</h2>
-    <p>Welcome, {{ user.username }}! Here are your posts:</p>
-    
-    {% if posts %}
-        <div class="post-list">
-            {% for post in posts %}
-                <article class="post">
-                    <h3><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
-                    <p class="post-meta">
-                        Posted on {{ post.date_posted|date:"F d, Y" }}
-                        <span class="post-actions">
-                            <a href="{% url 'post-update' post.id %}" class="btn-edit">Edit</a>
-                            <a href="{% url 'post-delete' post.id %}" class="btn-delete">Delete</a>
-                        </span>
-                    </p>
-                    <p>{{ post.content|truncatewords:30 }}</p>
-                </article>
-            {% endfor %}
+    <!-- Header Section -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="welcome-message">
+                    <h1>Welcome back, {{ user.first_name }} {{ user.last_name }} </h1>
+                    <p>Manage your content on Echos of the World</p>
+                </div>
+                <div class="header-logo">
+                    <img src="{% static 'images/echos-logo-blue.png' %}" alt="Echos of the World">
+                </div>
+            </div>
         </div>
-    {% else %}
-        <p>You haven't created any posts yet. <a href="{% url 'post-create' %}">Create your first post</a></p>
-    {% endif %}
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <div class="container">
+            <div class="dashboard-grid">
+                <!-- Profile Sidebar -->
+                <aside class="profile-sidebar">
+                    <div class="profile-card">
+                        <div class="profile-image">
+                            <img src="{% static 'images/default-avatar.png' %}" alt="Profile Picture">
+                        </div>
+                        <div class="profile-info">
+                            <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                            <p class="username">@{{ user.username }}</p>
+                            <p class="member-since">Member since {{ user.date_joined|date:"F Y" }}</p>
+                        </div>
+                        <div class="profile-actions">
+                            <a href="{% url 'post-create' %}" class="btn btn-primary">New Post</a>
+                           
+                        </div>
+                    </div>
+
+                    <div class="stats-card">
+                        <h4>Your Stats</h4>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number">{{ posts.count }}</span>
+                                <span class="stat-label">Posts</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ user.comments.count }}</span>
+                                <span class="stat-label">Comments</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">{{ total_views }}</span>
+                                <span class="stat-label">Views</span>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Content Area -->
+                <section class="content-area">
+                    <div class="content-header">
+                        <h2>Your Articles</h2>
+                        <div class="sort-options">
+                            <button class="btn btn-sort active">Latest</button>
+                            <button class="btn btn-sort">Popular</button>
+                        </div>
+                    </div>
+
+                    {% if posts %}
+                    <div class="articles-list">
+                        {% for post in posts %}
+                        <article class="article-card">
+                            <div class="article-content">
+                                <h3><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h3>
+                                <div class="article-meta">
+                                    <span class="date">{{ post.date_posted|date:"F d, Y" }}</span>
+                                    <span class="views"><i class="icon-eye"></i> {{ post.views }} views</span>
+                                    <span class="comments"><i class="icon-comment"></i> {{ post.comments.count }} comments</span>
+                                </div>
+                                <p class="excerpt">{{ post.content|truncatewords:25 }}</p>
+                                <span class="category-badge">{{ post.category|default:"General" }}</span>
+                            </div>
+                            <div class="article-actions">
+                                <a href="{% url 'post-update' post.id %}" class="btn btn-edit"><i class="icon-edit">update</i></a>
+                                <a href="{% url 'post-delete' post.id %}" class="btn btn-delete"><i class="icon-trash">delete</i></a>
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <img src="{% static 'images/no-posts.svg' %}" alt="No posts" class="empty-image">
+                        <h3>You haven't created any posts yet</h3>
+                        <p>Share your perspective with our global community</p>
+                        <a href="{% url 'post-create' %}" class="btn btn-primary">Create Your First Post</a>
+                    </div>
+                    {% endif %}
+
+                    <!-- Recent Activity Section -->
+                    <div class="activity-section">
+                        <h2>Recent Activity</h2>
+                        {% if recent_activity %}
+                        <div class="activity-list">
+                            {% for activity in recent_activity %}
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="icon-{{ activity.icon }}"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p>{{ activity.message }}</p>
+                                    <span class="activity-time">{{ activity.timestamp|timesince }} ago</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="empty-activity">
+                            <p>No recent activity</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="{% static 'images/echos-logo-white.png' %}" alt="Echos of the World">
+                </div>
+                <div class="footer-links">
+                    <a href="#">About Us</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2023 Echos of the World. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 </div>
+
+<style>
+    /* Base Styles */
+    :root {
+        --primary-blue: #1a73e8;
+        --dark-blue: #0d47a1;
+        --light-blue: #e8f0fe;
+        --white: #ffffff;
+        --gray-light: #f5f5f5;
+        --gray-medium: #e0e0e0;
+        --gray-dark: #757575;
+        --text-dark: #202124;
+    }
+
+    body {
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        color: var(--text-dark);
+        background-color: var(--white);
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    a {
+        text-decoration: none;
+        color: var(--primary-blue);
+    }
+
+    /* Header Styles */
+    .dashboard-header {
+        background-color: var(--white);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px 0;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .welcome-message h1 {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+        color: var(--text-dark);
+    }
+
+    .welcome-message p {
+        margin: 5px 0 0;
+        color: var(--gray-dark);
+    }
+
+    .header-logo img {
+        height: 40px;
+    }
+
+    /* Main Layout */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 30px;
+        padding: 30px 0;
+    }
+
+    /* Profile Sidebar */
+    .profile-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .profile-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        padding: 25px;
+        text-align: center;
+    }
+
+    .profile-image img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--light-blue);
+    }
+
+    .profile-info h3 {
+        margin: 15px 0 5px;
+        font-size: 18px;
+    }
+
+    .username {
+        color: var(--gray-dark);
+        font-size: 14px;
+    }
+
+    .member-since {
+        color: var(--gray-dark);
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    .profile-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    /* Stats Card */
+    .stats-card {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        padding: 20px;
+    }
+
+    .stats-card h4 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 16px;
+        color: var(--gray-dark);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        display: block;
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--primary-blue);
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: var(--gray-dark);
+    }
+
+    /* Content Area */
+    .content-area {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        padding: 25px;
+    }
+
+    .content-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .content-header h2 {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    .sort-options {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Articles List */
+    .articles-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .article-card {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--gray-medium);
+        padding-bottom: 15px;
+    }
+
+    .article-card:last-child {
+        border-bottom: none;
+    }
+
+    .article-content {
+        flex: 1;
+    }
+
+    .article-content h3 {
+        margin: 0 0 10px;
+        font-size: 18px;
+    }
+
+    .article-content h3 a {
+        color: var(--text-dark);
+    }
+
+    .article-content h3 a:hover {
+        color: var(--primary-blue);
+    }
+
+    .article-meta {
+        display: flex;
+        gap: 15px;
+        font-size: 13px;
+        color: var(--gray-dark);
+        margin-bottom: 10px;
+    }
+
+    .excerpt {
+        margin: 10px 0;
+        color: var(--text-dark);
+        font-size: 14px;
+    }
+
+    .category-badge {
+        display: inline-block;
+        background-color: var(--light-blue);
+        color: var(--primary-blue);
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .article-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    /* Empty States */
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .empty-state h3 {
+        margin: 20px 0 10px;
+    }
+
+    .empty-state p {
+        color: var(--gray-dark);
+        margin-bottom: 20px;
+    }
+
+    .empty-image {
+        max-width: 200px;
+        opacity: 0.7;
+    }
+
+    /* Activity Section */
+    .activity-section {
+        margin-top: 40px;
+    }
+
+    .activity-section h2 {
+        margin-bottom: 20px;
+        font-size: 20px;
+    }
+
+    .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .activity-icon {
+        width: 36px;
+        height: 36px;
+        background-color: var(--light-blue);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-blue);
+    }
+
+    .activity-content p {
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .activity-time {
+        font-size: 12px;
+        color: var(--gray-dark);
+    }
+
+    .empty-activity {
+        text-align: center;
+        padding: 20px;
+        color: var(--gray-dark);
+        background-color: var(--gray-light);
+        border-radius: 8px;
+    }
+
+    /* Footer */
+    .dashboard-footer {
+        background-color: var(--dark-blue);
+        color: var(--white);
+        padding: 30px 0;
+        margin-top: 50px;
+    }
+
+    .footer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .footer-logo img {
+        height: 30px;
+    }
+
+    .footer-links {
+        display: flex;
+        gap: 20px;
+    }
+
+    .footer-links a {
+        color: var(--white);
+        font-size: 14px;
+    }
+
+    .footer-copyright p {
+        margin: 0;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Buttons */
+    .btn {
+        display: inline-block;
+        padding: 10px 15px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-blue);
+        color: var(--white);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--dark-blue);
+    }
+
+    .btn-outline {
+        background-color: transparent;
+        color: var(--primary-blue);
+        border: 1px solid var(--primary-blue);
+    }
+
+    .btn-outline:hover {
+        background-color: var(--light-blue);
+    }
+
+    .btn-sort {
+        background-color: transparent;
+        color: var(--gray-dark);
+        border: 1px solid var(--gray-medium);
+        padding: 5px 10px;
+        font-size: 13px;
+    }
+
+    .btn-sort.active {
+        background-color: var(--primary-blue);
+        color: var(--white);
+        border-color: var(--primary-blue);
+    }
+
+    .btn-edit, .btn-delete {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+    }
+
+    .btn-edit {
+        background-color: var(--light-blue);
+        color: var(--primary-blue);
+    }
+
+    .btn-delete {
+        background-color: #fce8e6;
+        color: #d93025;
+    }
+
+    /* Icons */
+    .icon-eye, .icon-comment, .icon-edit, .icon-trash {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .header-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 15px;
+        }
+
+        .content-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .sort-options {
+            align-self: flex-end;
+        }
+
+        .article-card {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .article-actions {
+            flex-direction: row;
+            justify-content: flex-end;
+        }
+
+        .footer-links {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+</style>
 {% endblock %}
+

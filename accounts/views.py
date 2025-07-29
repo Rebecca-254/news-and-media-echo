@@ -10,6 +10,10 @@ from .forms import CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from posts.models import Post
+from django.db.models import Sum
+from .forms import UserUpdateForm
+from django.utils import timezone
+
 
 @csrf_protect
 def signup_view(request):
@@ -34,8 +38,14 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, f'Welcome back, {user.first_name}!')
-                return redirect('home')  # Redirect to your home page
+                messages.success(request, f'Welcome back, {user.first_name or user.username}!')
+                
+                # Check if user is admin/staff and redirect accordingly
+                if user.is_superuser or user.is_staff:
+                    return redirect('/admin/')
+                else:
+                    # Redirect regular users to dashboard
+                    return redirect('accounts:dashboard')  # Changed from 'home' to dashboard
             else:
                 messages.error(request, 'Invalid username or password.')
     else:
@@ -50,14 +60,82 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    return render(request, 'accounts/profile.html', {'user': request.user})
+    if request.method == 'POST':
+        form = UserUpdateForm(
+            request.POST,
+            request.FILES,
+            instance=request.user
+        )
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated!')
+            return redirect('accounts:profile')  # Use URL name instead
+    else:
+        form = UserUpdateForm(instance=request.user)
 
+    context = {
+        'form': form
+    }
+    return render(request, 'accounts/profile.html', context)
+
+# Fixed the dashboard function - it was inside the class which is incorrect
+@login_required
+def dashboard(request):
+    """Dashboard view for authenticated users"""
+    # Get all posts by the current user
+    user_posts = Post.objects.filter(author=request.user).order_by('-created_at')
+    
+    # Since your Post model doesn't have a 'views' field, we'll set it to 0
+    # You can add a views field to your Post model later if needed
+    total_views = 0  # Remove the aggregate query that was causing the error
+    
+    # Calculate total comments across all posts
+    # Check if your Post model has a related comments field
+    try:
+        total_comments = sum(post.comments.count() for post in user_posts)
+    except AttributeError:
+        # If no comments relation exists, set to 0
+        total_comments = 0
+    
+    # Recent activity (customize this based on your activity tracking system)
+    recent_activity = [
+        {
+            'icon': 'plus-circle',
+            'color': 'primary',
+            'message': 'Created post "How to Build a Django Dashboard"',
+            'timestamp': timezone.now() - timezone.timedelta(hours=2)
+        },
+        {
+            'icon': 'chat-left',
+            'color': 'info',
+            'message': 'Commented on "Django Best Practices"',
+            'timestamp': timezone.now() - timezone.timedelta(days=1)
+        },
+        {
+            'icon': 'eye',
+            'color': 'success',
+            'message': 'Your post got 15 new views',
+            'timestamp': timezone.now() - timezone.timedelta(days=2)
+        }
+    ]
+    
+    context = {
+        'posts': user_posts[:5],  # Show only first 5 posts
+        'total_posts': user_posts.count(),
+        'total_views': total_views,
+        'total_comments': total_comments,
+        'recent_activity': recent_activity
+    }
+    
+    return render(request, 'accounts/dashboard.html', context)
+
+# Alternative: Class-based view for user posts (if you prefer)
 class UserPostListView(LoginRequiredMixin, ListView):
     model = Post
-    template_name = 'accounts/dashboard.html'
+    template_name = 'accounts/user_posts.html'  # Different template for posts list
     context_object_name = 'posts'
-    paginate_by = 5
+    paginate_by = 10
 
     def get_queryset(self):
-       return Post.objects.filter(author=self.request.user).order_by('-created_at') 
-        
+        return Post.objects.filter(author=self.request.user).order_by('-created_at')
