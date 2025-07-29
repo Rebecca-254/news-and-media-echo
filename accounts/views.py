@@ -139,3 +139,11 @@ class UserPostListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user).order_by('-created_at')
+
+        # accounts/views.py (or wherever you handle auth)
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+
+class CustomLoginView(LoginView):
+    def get_success_url(self):
+        return reverse_lazy('profile', kwargs={'username': self.request.user.username})
