@@ -84,7 +84,7 @@ def profile_view(request):
 def dashboard(request):
     """Dashboard view for authenticated users"""
     # Get all posts by the current user
-    user_posts = Post.objects.filter(author=request.user).order_by('-created_at')
+    user_posts = Post.objects.filter(author=request.user).order_by('-date_posted')
     
     # Since your Post model doesn't have a 'views' field, we'll set it to 0
     # You can add a views field to your Post model later if needed
@@ -139,3 +139,11 @@ class UserPostListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Post.objects.filter(author=self.request.user).order_by('-created_at')
+
+        # accounts/views.py (or wherever you handle auth)
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+
+class CustomLoginView(LoginView):
+    def get_success_url(self):
+        return reverse_lazy('profile', kwargs={'username': self.request.user.username})
