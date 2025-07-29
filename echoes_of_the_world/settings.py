@@ -134,6 +134,5 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 # Crispy Forms Configuration
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
-LOGIN_REDIRECT_URL = reverse_lazy('profile')
-LOGOUT_REDIRECT_URL = '/accounts/login/'
+
 
