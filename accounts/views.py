@@ -84,7 +84,7 @@ def profile_view(request):
 def dashboard(request):
     """Dashboard view for authenticated users"""
     # Get all posts by the current user
-    user_posts = Post.objects.filter(author=request.user).order_by('-created_at')
+    user_posts = Post.objects.filter(author=request.user).order_by('-date_posted')
     
     # Since your Post model doesn't have a 'views' field, we'll set it to 0
     # You can add a views field to your Post model later if needed

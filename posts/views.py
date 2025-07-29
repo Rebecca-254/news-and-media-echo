@@ -6,11 +6,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post
 from .forms import PostForm
 
+def home(request):
+    context = {
+        'posts': Post.objects.all().order_by('-date_posted')
+    }
+    return render(request, 'blog/home.html', context)
+
+
 class PostListView(ListView):
     model = Post
     template_name = 'posts/post_list.html'
     context_object_name = 'posts'
-    ordering = ['-created_at']
+    ordering = ['-date_posted']
     paginate_by = 10
 
 class PostDetailView(DetailView):
