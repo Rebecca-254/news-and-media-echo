@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from news import static_pages
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -25,6 +26,9 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')), 
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('posts/', include('posts.urls')), # Custom app for posts
+    path('news/', include('news.urls', namespace='news')),
+    path('about/', static_pages.about, name='about'),
+    path('contact/', static_pages.contact, name='contact'),
 ]
 
 
