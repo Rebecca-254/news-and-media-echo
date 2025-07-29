@@ -356,10 +356,10 @@
       
       <div class="nav-links">
         <a href="{% url 'home' %}" class="active">Home</a>
-        <a href="#">News</a>
-        <a href="#">Features</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
+        <a href="{% url 'news:list' %}">News</a>
+        <a href="{% url 'news:features' %}">Features</a>
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'contact' %}">Contact</a>
       </div>
       
       <div class="auth-buttons">
